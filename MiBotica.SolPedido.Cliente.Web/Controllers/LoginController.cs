@@ -12,15 +12,18 @@ using MiBotica.SolPedido.Entidades.Base;
 
 namespace MiBotica.SolPedido.Cliente.Web.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : BaseLN
     {
         // GET: Login
+        [AllowAnonymous]
         public ActionResult Index()
         {
             Usuario u = new Usuario();
             return View(u);
         }
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Index(Usuario usuario)
         {
             if (string.IsNullOrEmpty(usuario.CodUsuario) || string.IsNullOrEmpty(usuario.ClaveTexto))
@@ -68,6 +71,7 @@ namespace MiBotica.SolPedido.Cliente.Web.Controllers
             return View(usuario);
         }
         [NonAction]
+        [AllowAnonymous]
         private void ParsearAcciones(List<Opcion> lista)
         {
 
@@ -98,7 +102,7 @@ namespace MiBotica.SolPedido.Cliente.Web.Controllers
                 }
             }
         }
-
+        [AllowAnonymous]
         public ActionResult CerrarSesion()
         {
             FormsAuthentication.SignOut();

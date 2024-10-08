@@ -9,6 +9,7 @@ namespace MiBotica.SolPedido.Cliente.Web
         {
             //filters.Add(new HandleErrorAttribute());
             filters.Add(new ExceptionFilterAtributes());// esto hace que el filtro de excepciones funcione en todas las clases
+            filters.Add(new AutenticacionFilter());// esto hace que el filtro de autenticacion funcione en todas las clases
         }
     }
 }

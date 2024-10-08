@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace MiBotica.SolPedido.Cliente.Web.Controllers
 {
+    
     public class HomeController : Controller
     {
         public ActionResult Index()

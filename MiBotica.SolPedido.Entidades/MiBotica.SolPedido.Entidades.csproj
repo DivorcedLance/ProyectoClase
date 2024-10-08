@@ -74,6 +74,7 @@
     <Compile Include="Core\Clientes.cs" />
     <Compile Include="Core\Opcion.cs" />
     <Compile Include="Core\Usuario.cs" />
+    <Compile Include="Filter\AutenticacionFilter.cs" />
     <Compile Include="Filter\ExceptionFilterAtributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VariablesWeb.cs" />
