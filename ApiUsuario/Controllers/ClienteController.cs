@@ -1,56 +1,94 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using MiBotica.SolPedido.Entidades.Core;
+using MiBotica.SolPedido.LogicaNegocio.Core;
 
 namespace ApiUsuario.Controllers
 {
     public class ClienteController : ApiController
     {
+        private readonly ClientesLN _clientesLN = new ClientesLN();
+
         // GET: api/Cliente
-        public IEnumerable<Cliente> Get()
+        public IEnumerable<Clientes> Get()
         {
-            return Variables.ListaClientes;
+            return _clientesLN.ListaClientes();
         }
 
         // GET: api/Cliente/5
-        public Cliente Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            return (from x in Variables.ListaClientes
-                    where x.Codigo == id
-                    select x).FirstOrDefault();
+            var cliente = _clientesLN.BuscarClientePorId(id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+            return Ok(cliente);
         }
 
         // POST: api/Cliente
-        public IHttpActionResult Post([FromBody] Cliente value)
+        public IHttpActionResult Post([FromBody] Clientes value)
         {
-            // Verificar si ya existe un cliente con el mismo código
-            var clienteExistente = Variables.ListaClientes.FirstOrDefault(c => c.Codigo == value.Codigo);
+            var clienteExistente = _clientesLN.BuscarClientePorId(value.Codigo);
 
             if (clienteExistente != null)
             {
                 return BadRequest("Ya existe un cliente con el mismo código.");
             }
 
-            // Si no existe, agregar el nuevo cliente
-            Variables.ListaClientes.Add(value);
+            var resultado = _clientesLN.InsertarCliente(value);
 
-            return Ok("Cliente agregado correctamente.");
+            if (resultado)
+            {
+                return Ok("Cliente agregado correctamente.");
+            }
+
+            return InternalServerError();
         }
 
-
         // PUT: api/Cliente/5
-        public void Put(int id, [FromBody] Cliente value)
+        public IHttpActionResult Put(int id, [FromBody] Cliente value)
         {
+            var clienteExistente = _clientesLN.BuscarClientePorId(id);
+
+            if (clienteExistente == null)
+            {
+                return NotFound();
+            }
+
+            clienteExistente.NombreCompleto = value.NombreCompleto;
+            clienteExistente.Zona = value.Zona;
+
+            var resultado = _clientesLN.ModificarCliente(clienteExistente);
+
+            if (resultado)
+            {
+                return Ok("Cliente actualizado correctamente.");
+            }
+
+            return InternalServerError();
         }
 
         // DELETE: api/Cliente/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
+            var clienteExistente = _clientesLN.BuscarClientePorId(id);
+
+            if (clienteExistente == null)
+            {
+                return NotFound();
+            }
+
+            var resultado = _clientesLN.EliminarCliente(id);
+
+            if (resultado)
+            {
+                return Ok("Cliente eliminado correctamente.");
+            }
+
+            return InternalServerError();
         }
     }
 }
-
